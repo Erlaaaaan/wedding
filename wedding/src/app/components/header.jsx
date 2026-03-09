@@ -90,7 +90,7 @@ export default function Header() {
           className="text-xl sm:text-2xl font-bold uppercase tracking-wide text-center hover:opacity-90 transition-opacity"
           style={{ color: "#9E1C60" }}
         >
-          Erlan Justin & Andrea&apos;s Wedding
+          Erlan & Andrea&apos;s Wedding
         </Link>
       </div>
       {/* Mobile Menu Button - positioned absolute so title stays centered */}
