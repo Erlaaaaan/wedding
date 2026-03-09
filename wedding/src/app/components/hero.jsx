@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 export default function Hero() {
@@ -100,9 +99,9 @@ export default function Hero() {
             Are getting married
           </p>
 
-          {/* Details card */}    
+          {/* Details card */}
           <div
-            className={`max-w-md rounded-2xl border px-6 py-5 mb-8 shadow-sm backdrop-blur-md transition-all duration-1000 ${
+            className={`max-w-md rounded-3xl border px-7 py-6 mb-8 shadow-lg backdrop-blur-md transition-all duration-1000 ${
               isHeroVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-6"
@@ -110,7 +109,7 @@ export default function Hero() {
             style={{
               borderColor: "rgba(158, 28, 96, 0.25)",
               background:
-                "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,232,238,0.9))",
+                "linear-gradient(135deg, rgba(255,255,255,0.97), rgba(248,232,238,0.96))",
               transitionDelay: "0.45s",
             }}
           >
@@ -130,33 +129,65 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* CTA */}    
+          {/* CTA + quick links */}
           <div
-            className={`flex flex-col sm:flex-row gap-4 transition-all duration-1000 ${
+            className={`space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:flex-wrap sm:items-center gap-4 transition-all duration-1000 ${
               isHeroVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-6"
             }`}
             style={{ transitionDelay: "0.6s" }}
           >
-            <Link
+            <a
               href="/form"
-              className="px-8 py-3 rounded-full font-medium text-sm tracking-wide shadow-md transition-transform duration-200"
+              className="inline-flex items-center justify-center px-8 py-3 rounded-full font-medium text-sm tracking-wide shadow-md transition-transform duration-200"
               style={{
                 background:
-                  "linear-gradient(135deg, #9E1C60 0%, #811844 100%)",
+                  "linear-gradient(135deg, #9E1C60 0%, #811844 45%, #F5DAA7 100%)",
                 color: "#fff",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform =
-                  "translateY(-2px) scale(1.02)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "translateY(0) scale(1)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform =
+                  "translateY(-2px) scale(1.02)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+              }}
             >
-              View Wedding Details
-            </Link>
+              Confirm Your RSVP
+            </a>
+            <div className="flex flex-wrap gap-3 text-xs sm:text-sm">
+              <a
+                href="/eventflow"
+                className="px-5 py-2 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+                style={{
+                  borderColor: "rgba(158, 28, 96, 0.35)",
+                  color: "#811844",
+                }}
+              >
+                View Ceremony Timeline
+              </a>
+              <a
+                href="/table"
+                className="px-5 py-2 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+                style={{
+                  borderColor: "rgba(158, 28, 96, 0.35)",
+                  color: "#811844",
+                }}
+              >
+                Check Your Table
+              </a>
+              <a
+                href="/map"
+                className="px-5 py-2 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+                style={{
+                  borderColor: "rgba(158, 28, 96, 0.35)",
+                  color: "#811844",
+                }}
+              >
+                See Location Map
+              </a>
+            </div>
           </div>
         </div>
 
