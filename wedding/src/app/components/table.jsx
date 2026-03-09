@@ -7,32 +7,47 @@ export default function TableSection() {
     {
       label: "Table 1",
       note: "Immediate Family",
-      guests: ["Parents of the Bride", "Parents of the Groom", "Lola Maria"],
+      guests: ["Parents of the Bride", "Parents of the Groom", "Lola & Lolo"],
     },
     {
       label: "Table 2",
       note: "Relatives",
-      guests: ["Tita Ana", "Tito Jun", "Kuya Mark", "Ate Liza"],
+      guests: ["Tita eya", "Tito andrea", "Kuya erlan", "Ate ej"],
     },
     {
-      label: "Table 3",
-      note: "College Friends",
-      guests: ["Josh", "Kim", "Paolo", "Mika"],
-    },
+        label: "Table 3",
+        note: "Relatives",
+        guests: ["Tita erlan", "Tito eerl", "Kuya eya", "Ate andrea"],
+      },
     {
       label: "Table 4",
-      note: "Work Friends",
-      guests: ["Sarah", "Neil", "Joan", "Carlo"],
+      note: "College Friends",
+      guests: ["Josh", "Kim", "Paolo", "Jopay"],
     },
     {
-      label: "Table 5",
-      note: "Childhood Friends",
-      guests: ["Ryan", "Jessa", "Nico", "Belle"],
-    },
+        label: "Table 5",
+        note: "College Friends",
+        guests: ["Josh", "Kim", "Paolo", "Jopay"],
+      },
     {
       label: "Table 6",
+      note: "Work Friends",
+      guests: ["mark", "Neil", "Jason", "Carlo"],
+    },
+    {
+        label: "Table 7",
+        note: "Work Friends",
+        guests: ["qwe", "asd", "zxc", "dfg"],
+      },
+    {
+      label: "Table 8",
+      note: "Childhood Friends",
+      guests: ["ella", "jamil", "Nico", "jear"],
+    },
+    {
+      label: "Table 9",
       note: "Special Guests",
-      guests: ["Ninong Roberto", "Ninang Grace", "Principal Sponsor"],
+      guests: ["Ninong", "Ninang ", "Principal Sponsor"],
     },
   ];
 

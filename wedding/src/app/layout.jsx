@@ -1,8 +1,11 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Erlan & Andrea Wedding",
+  title: "EJ&A Wedding",
   description: "Wedding invitation and RSVP for Erlan Justin & Andrea.",
+  icons: {
+    icon: "/E&A.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
