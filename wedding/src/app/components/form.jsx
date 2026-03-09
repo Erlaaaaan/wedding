@@ -29,7 +29,7 @@ export default function Form() {
       className="relative min-h-[calc(100vh-72px)] overflow-hidden"
       style={{ backgroundColor: "#F5E6E8" }}
     >
-      {/* Background */}    
+      {/* Background */}
       <div
         className="absolute inset-0"
         style={{
@@ -42,8 +42,59 @@ export default function Form() {
       />
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(245, 230, 232, 0.62)" }}
+        style={{ background: "rgba(245, 230, 232, 0.7)" }}
       />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        aria-hidden="true"
+      >
+        <div
+          className="absolute -left-24 top-10 w-72 h-72 rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle at 15% 15%, rgba(245,218,167,0.85), transparent 60%)",
+          }}
+        />
+        <div
+          className="absolute -right-24 bottom-0 w-80 h-80 rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle at 85% 85%, rgba(158,28,96,0.18), transparent 55%)",
+          }}
+        />
+        {/* soft floral line art corners */}
+        <svg
+          className="absolute -left-10 top-6 w-32 h-32 opacity-40"
+          viewBox="0 0 120 120"
+        >
+          <g
+            fill="none"
+            stroke="#9E1C60"
+            strokeWidth="0.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M10 80 C25 55, 40 45, 60 40 C45 50, 38 65, 32 80" />
+            <path d="M18 88 C30 76, 46 72, 60 70" />
+            <circle cx="26" cy="60" r="4" />
+          </g>
+        </svg>
+        <svg
+          className="absolute -right-10 bottom-4 w-32 h-32 opacity-40"
+          viewBox="0 0 120 120"
+        >
+          <g
+            fill="none"
+            stroke="#811844"
+            strokeWidth="0.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M110 40 C90 55, 80 70, 70 85 C82 78, 96 75, 106 72" />
+            <circle cx="88" cy="58" r="4" />
+          </g>
+        </svg>
+      </div>
 
       <div className="relative z-10 px-6 py-16 lg:px-16">
         <div className="max-w-4xl mx-auto">
@@ -91,13 +142,7 @@ export default function Form() {
                       Andrea ♥ Erlan
                     </p>
                   </div>
-                  <Link
-                    href="/"
-                    className="text-xs uppercase tracking-[0.25em] underline underline-offset-4"
-                    style={{ color: "#811844" }}
-                  >
-                    Back
-                  </Link>
+                  
                 </div>
               </div>
 
@@ -354,6 +399,10 @@ export default function Form() {
           </div>
         </div>
       </div>
+
+      {/* Edge navigation arrows */}
+     
+     
     </section>
   );
 }
