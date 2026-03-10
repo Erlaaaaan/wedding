@@ -38,12 +38,6 @@ export default function Form() {
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
       const publicKey = process.env.NEXT_PUBLIC_EMAILJS_USER_ID;
 
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error(
-          "EmailJS keys are missing. Check NEXT_PUBLIC_EMAILJS_* in .env.local"
-        );
-      }
-
       // 1) Send EmailJS first so user can proceed even if Firestore rules block.
       await emailjs.send(
         serviceId,
