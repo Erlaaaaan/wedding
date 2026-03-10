@@ -142,6 +142,26 @@ export default function MapSection() {
                 View Ceremony Timeline
               </a>
               <a
+                href="/nuptials"
+                className="px-3 py-1.5 rounded-full border bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+                style={{
+                  borderColor: "rgba(210, 83, 83, 0.45)",
+                  color: "#9E3B3B",
+                }}
+              >
+                Nuptials Info
+              </a>
+              <a
+                href="/attire"
+                className="px-3 py-1.5 rounded-full border bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+                style={{
+                  borderColor: "rgba(210, 83, 83, 0.45)",
+                  color: "#9E3B3B",
+                }}
+              >
+                Attire
+              </a>
+              <a
                 href="/table"
                 className="px-3 py-1.5 rounded-full border bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
                 style={{

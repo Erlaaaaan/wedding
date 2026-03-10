@@ -164,6 +164,26 @@ export default function TableSection() {
             View Ceremony Timeline
           </a>
           <a
+            href="/nuptials"
+            className="px-5 py-2 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+            style={{
+              borderColor: "rgba(210, 83, 83, 0.45)",
+              color: "#9E3B3B",
+            }}
+          >
+            Nuptials Info
+          </a>
+          <a
+            href="/attire"
+            className="px-5 py-2 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
+            style={{
+              borderColor: "rgba(210, 83, 83, 0.45)",
+              color: "#9E3B3B",
+            }}
+          >
+            Attire / Dress Code
+          </a>
+          <a
             href="/table"
             className="px-5 py-2 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm hover:bg-white transition-colors"
             style={{
