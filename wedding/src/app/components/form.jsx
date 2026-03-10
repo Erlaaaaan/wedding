@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebaseConfig/firebase";
+import emailjs from "@emailjs/browser";
 
 export default function Form() {
   const [status, setStatus] = useState("attending"); // attending | not_attending
@@ -10,6 +13,9 @@ export default function Form() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [warning, setWarning] = useState("");
 
   const isAttending = status === "attending";
 
@@ -19,9 +25,94 @@ export default function Form() {
     };
   }, [isAttending]);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (submitting) return;
+
+    setSubmitting(true);
+    setError("");
+    setWarning("");
+
+    try {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_USER_ID;
+
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error(
+          "EmailJS keys are missing. Check NEXT_PUBLIC_EMAILJS_* in .env.local"
+        );
+      }
+
+      // 1) Send EmailJS first so user can proceed even if Firestore rules block.
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          // Common EmailJS template variable names
+          name: fullName || "Guest",
+          full_name: fullName || "Guest",
+          from_name: fullName || "Guest",
+          from_email: email || "",
+          email: email || "",
+          reply_to: email || "",
+          phone: phone || "",
+          attendance: summary.statusLabel,
+          status,
+          status_label: summary.statusLabel,
+
+           // Optional explicit to_email if your template expects it
+          to_email: "kokobebebabryant@gmail.com",
+
+          // Put all details in one field too (useful if template only renders {{message}})
+          message: `RSVP: ${summary.statusLabel}\nName: ${fullName || "Guest"}\nEmail: ${
+            email || "-"
+          }\nPhone: ${phone || "-"}\n\nMessage:\n${message || "-"}`,
+
+          source: "Wedding RSVP Form",
+        },
+        { publicKey }
+      );
+
+      setSubmitted(true);
+
+      // 2) Best-effort save to Firestore (non-blocking for the UI flow).
+      try {
+        await addDoc(collection(db, "rsvps"), {
+          status,
+          fullName,
+          email,
+          phone,
+          message,
+          createdAt: serverTimestamp(),
+        });
+      } catch (dbErr) {
+        console.error("Error saving RSVP to Firestore:", dbErr);
+        const message =
+          (dbErr &&
+            typeof dbErr === "object" &&
+            "message" in dbErr &&
+            dbErr.message) ||
+          "";
+        setWarning(
+          `Email sent, but saving to database failed${
+            message ? `: ${message}` : "."
+          }`
+        );
+      }
+    } catch (err) {
+      console.error("Error submitting RSVP:", err);
+      const message =
+        (err && typeof err === "object" && "message" in err && err.message) ||
+        "";
+      setError(
+        `Sorry, something went wrong while submitting your RSVP${
+          message ? `: ${message}` : "."
+        }`
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -296,26 +387,53 @@ export default function Form() {
                 <div className="mt-6 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
                   <button
                     type="submit"
-                    className="px-8 py-3 rounded-full font-medium text-sm tracking-wide shadow-md transition-transform duration-200"
+                    disabled={submitting}
+                    className="px-8 py-3 rounded-full font-medium text-sm tracking-wide shadow-md transition-transform duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
                     style={{
                       background:
                         "linear-gradient(135deg, #9E1C60 0%, #811844 100%)",
                       color: "#fff",
                     }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform =
-                        "translateY(-2px) scale(1.02)")
-                    }
+                    onMouseEnter={(e) => {
+                      if (submitting) return;
+                      e.currentTarget.style.transform =
+                        "translateY(-2px) scale(1.02)";
+                    }}
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.transform = "translateY(0) scale(1)")
                     }
                   >
-                    Submit RSVP
+                    {submitting ? "Submitting..." : "Submit RSVP"}
                   </button>
                   <p className="text-xs" style={{ color: "#811844" }}>
                     By submitting, you confirm the details are correct.
                   </p>
                 </div>
+
+                {error && (
+                  <div
+                    className="mt-4 rounded-2xl border px-4 py-3 text-xs"
+                    style={{
+                      borderColor: "rgba(200, 30, 60, 0.4)",
+                      background: "rgba(255,255,255,0.85)",
+                      color: "#811844",
+                    }}
+                  >
+                    {error}
+                  </div>
+                )}
+                {warning && (
+                  <div
+                    className="mt-4 rounded-2xl border px-4 py-3 text-xs"
+                    style={{
+                      borderColor: "rgba(210, 83, 83, 0.35)",
+                      background: "rgba(255,255,255,0.85)",
+                      color: "#811844",
+                    }}
+                  >
+                    {warning}
+                  </div>
+                )}
 
                 {submitted && (
                   <div
@@ -331,10 +449,6 @@ export default function Form() {
                     </div>
                     <div className="text-sm mt-1">
                       Status: <span className="font-medium">{summary.statusLabel}</span>
-                    </div>
-                    <div className="text-xs mt-2 opacity-80">
-                      (Note: This is a front-end only form for now—no data is sent
-                      to a server yet.)
                     </div>
                   </div>
                 )}
