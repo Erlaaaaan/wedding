@@ -38,27 +38,37 @@ export default function Form() {
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
       const publicKey = process.env.NEXT_PUBLIC_EMAILJS_USER_ID;
 
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error(
+          "EmailJS keys are missing. Check NEXT_PUBLIC_EMAILJS_* in .env.local"
+        );
+      }
+
       // 1) Send EmailJS first so user can proceed even if Firestore rules block.
       await emailjs.send(
         serviceId,
         templateId,
         {
-          // Common EmailJS template variable names
+          // Cover the common variable names you might be using in the template
+          // Names
           name: fullName || "Guest",
           full_name: fullName || "Guest",
           from_name: fullName || "Guest",
-          from_email: email || "",
+          to_name: fullName || "Guest",
+
+          // Email / phone
           email: email || "",
+          from_email: email || "",
           reply_to: email || "",
+          to_email: "kokobebebabryant@gmail.com",
           phone: phone || "",
+
+          // Attendance
           attendance: summary.statusLabel,
           status,
           status_label: summary.statusLabel,
 
-           // Optional explicit to_email if your template expects it
-          to_email: "kokobebebabryant@gmail.com",
-
-          // Put all details in one field too (useful if template only renders {{message}})
+          // Put all details in one field too (for {{message}})
           message: `RSVP: ${summary.statusLabel}\nName: ${fullName || "Guest"}\nEmail: ${
             email || "-"
           }\nPhone: ${phone || "-"}\n\nMessage:\n${message || "-"}`,
@@ -99,10 +109,12 @@ export default function Form() {
       const message =
         (err && typeof err === "object" && "message" in err && err.message) ||
         "";
+      const fallback =
+        typeof err === "string" ? err : JSON.stringify(err, null, 2);
       setError(
         `Sorry, something went wrong while submitting your RSVP${
-          message ? `: ${message}` : "."
-        }`
+          message ? `: ${message}` : ""
+        }${!message && fallback ? `\n\n${fallback}` : ""}`
       );
     } finally {
       setSubmitting(false);
