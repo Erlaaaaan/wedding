@@ -135,23 +135,89 @@ export default function EnvelopeGate({ children }) {
               viewBox="0 0 280 180"
               className="w-full max-w-4xl h-auto min-h-[50vh] max-h-[70vh] drop-shadow-2xl"
             >
+              <defs>
+                <linearGradient id="envelope-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#D25353" />
+                  <stop offset="100%" stopColor="#811844" />
+                </linearGradient>
+                <linearGradient id="envelope-flap" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#213C51" />
+                  <stop offset="100%" stopColor="#9E1C60" />
+                </linearGradient>
+
+                {/* Floral image texture (from public/images/flower.jpg) */}
+                <pattern
+                  id="envelope-floral-photo"
+                  patternUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="280"
+                  height="180"
+                >
+                  <image
+                    href="/images/flower.jpg"
+                    x="-20"
+                    y="-20"
+                    width="300"
+                    height="200"
+                    preserveAspectRatio="xMidYMid slice"
+                    opacity="0.95"
+                  />
+                </pattern>
+              </defs>
+
+              {/* Soft card background */}
+              <rect x="12" y="12" width="256" height="156" rx="16" fill="#FBF4F6" />
+
+              {/* Shadow under envelope */}
+              <ellipse cx="140" cy="150" rx="92" ry="9" fill="rgba(0,0,0,0.09)" />
+
+              {/* Envelope body with floral photo background */}
+              <rect
+                x="30"
+                y="60"
+                width="220"
+                height="90"
+                rx="10"
+                fill="url(#envelope-floral-photo)"
+                stroke="#65113A"
+                strokeWidth="1.5"
+              />
+              {/* Gentle tint so flowers look aesthetic/soft */}
+              <rect
+                x="30"
+                y="60"
+                width="220"
+                height="90"
+                rx="10"
+                fill="rgba(251, 244, 246, 0.45)"
+              />
+
+              {/* Bottom inner folds */}
               <path
-                d="M 20 160 L 20 40 L 140 100 L 260 40 L 260 160 Z"
-                fill="#9E1C60"
-                stroke="#811844"
-                strokeWidth="2"
+                d="M 30 60 L 140 135 L 250 60"
+                fill="rgba(255,255,255,0.10)"
+                stroke="rgba(255,255,255,0.22)"
+                strokeWidth="0.9"
+              />
+
+              {/* Top flap */}
+              <path
+                d="M 30 60 L 140 20 L 250 60 L 140 92 Z"
+                fill="url(#envelope-flap)"
+                stroke="#65113A"
+                strokeWidth="1.5"
               />
               <path
-                d="M 20 40 L 140 100 L 260 40"
-                fill="#9E1C60"
-                stroke="#811844"
-                strokeWidth="2"
+                d="M 42 62 L 140 28 L 238 62"
+                fill="none"
+                stroke="rgba(255,255,255,0.4)"
+                strokeWidth="1"
               />
-              <path
-                d="M 35 52 L 140 95 L 245 52"
-                fill="#9E1C60"
-                opacity="0.5"
-              />
+
+             
+           
+            
             </svg>
           </div>
           {!isAnimating && (
