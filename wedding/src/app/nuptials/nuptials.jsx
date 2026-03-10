@@ -6,68 +6,59 @@ export default function NuptialsSection() {
     cream: "#FFEAD3",
   };
 
-  const entourage = [
-    {
-      title: "Parents of the Groom",
-      names: ["Mr. Groom Father (placeholder)", "Mrs. Groom Mother (placeholder)"],
-    },
-    {
-      title: "Parents of the Bride",
-      names: ["Mr. Bride Father (placeholder)", "Mrs. Bride Mother (placeholder)"],
-    },
-    {
-      title: "Principal Sponsors",
-      names: [
-        "Principal Sponsor 1 (placeholder)",
-        "Principal Sponsor 2 (placeholder)",
-        "Principal Sponsor 3 (placeholder)",
-        "Principal Sponsor 4 (placeholder)",
-      ],
-    },
-    {
-      title: "Secondary Sponsors",
-      names: [
-        "Secondary Sponsor 1 (placeholder)",
-        "Secondary Sponsor 2 (placeholder)",
-        "Secondary Sponsor 3 (placeholder)",
-        "Secondary Sponsor 4 (placeholder)",
-      ],
-    },
-    {
-      title: "Best Men",
-      names: ["Best Man 1 (placeholder)", "Best Man 2 (placeholder)"],
-    },
-    {
-      title: "Maid of Honor",
-      names: ["Maid of Honor (placeholder)"],
-    },
-    {
-      title: "Groomsmen",
-      names: [
-        "Groomsman 1 (placeholder)",
-        "Groomsman 2 (placeholder)",
-        "Groomsman 3 (placeholder)",
-        "Groomsman 4 (placeholder)",
-      ],
-    },
-    {
-      title: "Bridesmaids",
-      names: [
-        "Bridesmaid 1 (placeholder)",
-        "Bridesmaid 2 (placeholder)",
-        "Bridesmaid 3 (placeholder)",
-        "Bridesmaid 4 (placeholder)",
-      ],
-    },
-    {
-      title: "Flower Girl",
-      names: ["Flower Girl (placeholder)"],
-    },
-    {
-      title: "Ring Bearer",
-      names: ["Ring Bearer (placeholder)"],
-    },
+  const parentsGroom = [
+    "Mr. Groom Father (placeholder)",
+    "Mrs. Groom Mother (placeholder)",
   ];
+  const parentsBride = [
+    "Mr. Bride Father (placeholder)",
+    "Mrs. Bride Mother (placeholder)",
+  ];
+
+  const principalSponsors = [
+    "Principal Sponsor 1 (placeholder)",
+    "Principal Sponsor 2 (placeholder)",
+    "Principal Sponsor 3 (placeholder)",
+    "Principal Sponsor 4 (placeholder)",
+    "Principal Sponsor 5 (placeholder)",
+    "Principal Sponsor 6 (placeholder)",
+  ];
+
+  const secondarySponsors = [
+    "Secondary Sponsor 1 (placeholder)",
+    "Secondary Sponsor 2 (placeholder)",
+    "Secondary Sponsor 3 (placeholder)",
+    "Secondary Sponsor 4 (placeholder)",
+  ];
+
+  const bestMan = ["Best Man (placeholder)"];
+  const maidOfHonor = ["Maid of Honor (placeholder)"];
+
+  const groomsmen = [
+    "Groomsman 1 (placeholder)",
+    "Groomsman 2 (placeholder)",
+    "Groomsman 3 (placeholder)",
+    "Groomsman 4 (placeholder)",
+    "Groomsman 5 (placeholder)",
+    "Groomsman 6 (placeholder)",
+  ];
+
+  const bridesmaids = [
+    "Bridesmaid 1 (placeholder)",
+    "Bridesmaid 2 (placeholder)",
+    "Bridesmaid 3 (placeholder)",
+    "Bridesmaid 4 (placeholder)",
+    "Bridesmaid 5 (placeholder)",
+    "Bridesmaid 6 (placeholder)",
+  ];
+
+  const flowerGirl = ["Flower Girl (placeholder)"];
+  const ringBearer = ["Ring Bearer (placeholder)"];
+
+  const splitTwoCols = (arr) => {
+    const mid = Math.ceil(arr.length / 2);
+    return [arr.slice(0, mid), arr.slice(mid)];
+  };
 
   return (
     <section
@@ -94,55 +85,185 @@ export default function NuptialsSection() {
         }}
       />
 
-      <div className="relative max-w-6xl mx-auto">
-        <div className="max-w-2xl mb-10">
-          <p
-            className="text-xs uppercase tracking-[0.3em] mb-2"
-            style={{ color: theme.wine }}
-          >
-            Nuptials
-          </p>
-          <h1
-            className="text-3xl sm:text-4xl font-semibold mb-3"
-            style={{ color: theme.coral }}
-          >
-            Entourage (placeholder list)
-          </h1>
-          <p className="text-sm" style={{ color: theme.wine }}>
-            Replace the placeholders with the real names anytime.
-          </p>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {entourage.map((group) => (
-            <div
-              key={group.title}
-              className="rounded-3xl border shadow-lg p-6 bg-white/85 backdrop-blur-sm"
-              style={{
-                borderColor: "rgba(158,59,59,0.22)",
-                backgroundImage: `radial-gradient(circle at 0% 0%, rgba(255,234,211,0.55), rgba(255,255,255,0.0) 60%)`,
-              }}
-            >
+      <div className="relative max-w-3xl mx-auto">
+        <div
+          className="rounded-[2.25rem] border shadow-2xl overflow-hidden"
+          style={{
+            borderColor: "rgba(0,0,0,0.08)",
+            background: "#FBF9F5",
+          }}
+        >
+          <div className="px-8 sm:px-10 py-10 sm:py-12">
+            {/* Header */}
+            <div className="text-center mb-10">
               <p
-                className="text-[11px] uppercase tracking-[0.3em] mb-2"
+                className="text-[13px] tracking-[0.28em] mb-2 uppercase"
                 style={{ color: theme.wine }}
               >
-                {group.title}
+                Erlan Justin & Andrea
               </p>
-              <ul className="space-y-1.5 text-sm" style={{ color: theme.wine }}>
-                {group.names.map((name) => (
-                  <li key={name} className="flex gap-2">
-                    <span
-                      aria-hidden="true"
-                      className="mt-[7px] inline-block w-2 h-2 rounded-full"
-                      style={{ backgroundColor: theme.blush }}
-                    />
-                    <span>{name}</span>
-                  </li>
-                ))}
-              </ul>
+              <h1
+                className="text-3xl sm:text-4xl tracking-[0.18em] uppercase"
+                style={{ color: theme.wine }}
+              >
+                Nuptials
+              </h1>
+              <div
+                className="mx-auto mt-4 h-px w-40"
+                style={{ backgroundColor: "rgba(0,0,0,0.18)" }}
+              />
             </div>
-          ))}
+
+            {/* Parents */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mb-10">
+              <div className="text-center">
+                <div
+                  className="text-[11px] tracking-[0.28em] uppercase mb-4"
+                  style={{ color: theme.wine }}
+                >
+                  Parents of the Groom
+                </div>
+                <div className="space-y-1 text-sm" style={{ color: theme.wine }}>
+                  {parentsGroom.map((n) => (
+                    <div key={n}>{n}</div>
+                  ))}
+                </div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-[11px] tracking-[0.28em] uppercase mb-4"
+                  style={{ color: theme.wine }}
+                >
+                  Parents of the Bride
+                </div>
+                <div className="space-y-1 text-sm" style={{ color: theme.wine }}>
+                  {parentsBride.map((n) => (
+                    <div key={n}>{n}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Principal Sponsors */}
+            <div className="text-center mb-10">
+              <div
+                className="text-xs tracking-[0.32em] uppercase mb-4"
+                style={{ color: theme.wine }}
+              >
+                Principal Sponsors
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                {splitTwoCols(principalSponsors).map((col, idx) => (
+                  <div key={idx} className="space-y-1" style={{ color: theme.wine }}>
+                    {col.map((n) => (
+                      <div key={n}>{n}</div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Secondary Sponsors */}
+            <div className="text-center mb-10">
+              <div
+                className="text-xs tracking-[0.32em] uppercase mb-4"
+                style={{ color: theme.wine }}
+              >
+                Secondary Sponsors
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                {splitTwoCols(secondarySponsors).map((col, idx) => (
+                  <div key={idx} className="space-y-1" style={{ color: theme.wine }}>
+                    {col.map((n) => (
+                      <div key={n}>{n}</div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Best Man / Maid of Honor */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mb-10 text-center text-sm">
+              <div>
+                <div
+                  className="text-[11px] tracking-[0.3em] uppercase mb-3"
+                  style={{ color: theme.wine }}
+                >
+                  Best Man
+                </div>
+                {bestMan.map((n) => (
+                  <div key={n}>{n}</div>
+                ))}
+              </div>
+              <div>
+                <div
+                  className="text-[11px] tracking-[0.3em] uppercase mb-3"
+                  style={{ color: theme.wine }}
+                >
+                  Maid of Honor
+                </div>
+                {maidOfHonor.map((n) => (
+                  <div key={n}>{n}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Groomsmen / Bridesmaids */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mb-10 text-center text-sm">
+              <div>
+                <div
+                  className="text-[11px] tracking-[0.3em] uppercase mb-3"
+                  style={{ color: theme.wine }}
+                >
+                  Groomsmen
+                </div>
+                <div className="space-y-1" style={{ color: theme.wine }}>
+                  {groomsmen.map((n) => (
+                    <div key={n}>{n}</div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div
+                  className="text-[11px] tracking-[0.3em] uppercase mb-3"
+                  style={{ color: theme.wine }}
+                >
+                  Bridesmaids
+                </div>
+                <div className="space-y-1" style={{ color: theme.wine }}>
+                  {bridesmaids.map((n) => (
+                    <div key={n}>{n}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Flower girl / ring bearer */}
+            <div className="text-center space-y-8 text-sm" style={{ color: theme.wine }}>
+              <div>
+                <div
+                  className="text-[11px] tracking-[0.3em] uppercase mb-2"
+                  style={{ color: theme.wine }}
+                >
+                  Flower Girl
+                </div>
+                {flowerGirl.map((n) => (
+                  <div key={n}>{n}</div>
+                ))}
+              </div>
+              <div>
+                <div
+                  className="text-[11px] tracking-[0.3em] uppercase mb-2"
+                  style={{ color: theme.wine }}
+                >
+                  Ring Bearer
+                </div>
+                {ringBearer.map((n) => (
+                  <div key={n}>{n}</div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
