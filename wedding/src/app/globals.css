@@ -4,3 +4,32 @@ body {
   margin: 0;
 }
 
+.envelope-scene {
+  perspective: 1400px;
+}
+
+.envelope-flap {
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 1s cubic-bezier(0.45, 0.05, 0.2, 1);
+  backface-visibility: hidden;
+}
+
+.envelope-flap.is-open {
+  transform: rotateX(-168deg);
+}
+
+.screen-rise {
+  animation: screen-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes screen-rise {
+  from {
+    opacity: 0;
+    transform: translateY(36px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

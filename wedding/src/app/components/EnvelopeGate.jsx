@@ -1,242 +1,269 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Cinzel, Cormorant_Garamond, Great_Vibes } from "next/font/google";
+
+const serif = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const script = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const caps = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+const WEDDING = new Date(2029, 0, 14, 15, 0, 0);
+const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+function pad(value) {
+  return String(value).padStart(2, "0");
+}
+
+function useCountdown(target) {
+  const [now, setNow] = useState(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return useMemo(() => {
+    if (now == null) {
+      return { days: "--", hours: "--", mins: "--", secs: "--" };
+    }
+    const diff = Math.max(0, target.getTime() - now);
+    return {
+      days: String(Math.floor(diff / 86400000)),
+      hours: pad(Math.floor((diff % 86400000) / 3600000)),
+      mins: pad(Math.floor((diff % 3600000) / 60000)),
+      secs: pad(Math.floor((diff % 60000) / 1000)),
+    };
+  }, [now, target]);
+}
+
+function januaryCells() {
+  const leading = new Date(2029, 0, 1).getDay();
+  return [
+    ...Array.from({ length: leading }, () => null),
+    ...Array.from({ length: 31 }, (_, index) => index + 1),
+  ];
+}
+
+function Countdown({ time }) {
+  const units = [
+    ["Days", time.days],
+    ["Hours", time.hours],
+    ["Mins", time.mins],
+    ["Secs", time.secs],
+  ];
+
+  return (
+    <div className="flex items-end justify-center gap-4 sm:gap-8">
+      {units.map(([label, value], index) => (
+        <div key={label} className="flex items-end">
+          {index > 0 && (
+            <span className={`${serif.className} mb-6 px-2 text-3xl text-white/70`} aria-hidden="true">
+              ·
+            </span>
+          )}
+          <div className="min-w-[4.5rem] text-center">
+            <div className={`${serif.className} text-5xl font-medium leading-none text-white sm:text-7xl`}>
+              {value}
+            </div>
+            <div className={`${caps.className} mt-2 text-[10px] uppercase tracking-[0.28em] text-white/80`}>
+              {label}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function EnvelopeGate({ children }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [step, setStep] = useState("sealed");
+  const time = useCountdown(WEDDING);
+  const days = useMemo(() => januaryCells(), []);
+  const isDone = step === "done";
 
-  const handleOpen = () => {
-    if (isOpen) return;
-    setIsAnimating(true);
-    setTimeout(() => {
-      setIsOpen(true);
-      setIsAnimating(false);
-    }, 1200);
+  useEffect(() => {
+    document.body.style.overflow = isDone ? "" : "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isDone]);
+
+  const advance = () => {
+    if (step === "sealed") {
+      setStep("opening");
+      window.setTimeout(() => setStep("countdown"), 1000);
+      return;
+    }
+    if (step === "opening") return;
+    if (step === "countdown") {
+      setStep("calendar");
+      return;
+    }
+    if (step === "calendar") setStep("done");
+  };
+
+  const addToCalendar = (event) => {
+    event.stopPropagation();
+    const url =
+      "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" +
+      encodeURIComponent("Erlan & Andrea Wedding") +
+      "&dates=20290114T070000Z/20290114T090000Z" +
+      "&details=" +
+      encodeURIComponent("Ceremony at 3:00 PM · Reception at 5:00 PM");
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
     <div className="relative">
-      {/* Envelope Overlay - full screen, wedding invitation lace style */}
       <div
-        className={`fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-700 overflow-hidden ${
-          isOpen ? "pointer-events-none opacity-0" : "opacity-100"
+        className={`fixed inset-0 z-[100] transition-opacity duration-700 ${
+          isDone ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
-        style={{ backgroundColor: "#F5E6E8" }}
+        style={{
+          backgroundImage: "url('/images/hero-watercolor.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
-        {/* Lace / paper-cut style background - floral, vines, butterfly */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <pattern id="lace-floral" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-                {/* Small 5-petal flowers */}
-                <g fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="0.8">
-                  <circle cx="30" cy="30" r="8" />
-                  <path d="M30 22v-4 M30 38v4 M22 30h-4 M38 30h4 M24 24l-3-3 M36 36l3 3 M24 36l-3 3 M36 24l3-3" />
-                </g>
-                <g fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.6">
-                  <circle cx="100" cy="80" r="5" />
-                  <path d="M100 75v-2.5 M100 85v2.5 M95 80h-2.5 M105 80h2.5" />
-                </g>
-                {/* Vine curves */}
-                <path d="M0 100 Q50 80 100 100 T200 100" stroke="rgba(255,255,255,0.5)" strokeWidth="0.6" fill="none" />
-                <path d="M0 120 Q60 100 120 120 T200 120" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" fill="none" />
-              </pattern>
-              <pattern id="lace-dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                <circle cx="12" cy="12" r="0.8" fill="rgba(255,255,255,0.4)" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#lace-dots)" />
-            <rect width="100%" height="100%" fill="url(#lace-floral)" />
-            {/* Mandala-style flowers - top left & right */}
-            <g fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.7" transform="translate(180, 120)">
-              <circle r="12" />
-              <circle r="18" />
-              <path d="M0 -18 L0 -12 M0 18 L0 12 M-18 0 L-12 0 M18 0 L12 0 M-12.7 -12.7 L-8.5 -8.5 M12.7 12.7 L8.5 8.5 M12.7 -12.7 L8.5 -8.5 M-12.7 12.7 L-8.5 8.5" />
-              <path d="M0 -15 L0 -10 M0 15 L0 10 M-15 0 L-10 0 M15 0 L10 0" transform="rotate(45)" />
-            </g>
-            <g fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.7" transform="translate(1020, 120)">
-              <circle r="12" />
-              <circle r="18" />
-              <path d="M0 -18 L0 -12 M0 18 L0 12 M-18 0 L-12 0 M18 0 L12 0 M-12.7 -12.7 L-8.5 -8.5 M12.7 12.7 L8.5 8.5 M12.7 -12.7 L8.5 -8.5 M-12.7 12.7 L-8.5 8.5" />
-            </g>
-          </svg>
-          {/* Center butterfly - lace / paper-cut style, symmetrical */}
-          <svg className="absolute top-[10%] left-1/2 -translate-x-1/2 w-36 h-28 opacity-95" viewBox="0 0 100 70">
-            <g fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-              {/* Left wing */}
-              <path d="M50 35 Q25 15 10 25 Q5 40 20 50 Q40 45 50 35" />
-              <path d="M50 35 Q35 25 25 30 Q20 38 30 45 Q42 42 50 35" />
-              {/* Right wing */}
-              <path d="M50 35 Q75 15 90 25 Q95 40 80 50 Q60 45 50 35" />
-              <path d="M50 35 Q65 25 75 30 Q80 38 70 45 Q58 42 50 35" />
-              {/* Body */}
-              <path d="M50 18 L50 52" strokeWidth="1.2" />
-              <ellipse cx="50" cy="35" rx="2.5" ry="4" fill="rgba(255,255,255,0.95)" />
-              {/* Antennae */}
-              <path d="M50 18 Q45 12 42 10" />
-              <path d="M50 18 Q55 12 58 10" />
-            </g>
-          </svg>
-          {/* Corner lace flourishes - ornate curves */}
-          <svg className="absolute top-6 left-6 w-40 h-40 opacity-80" viewBox="0 0 100 100">
-            <g fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1">
-              <path d="M0 50 Q20 20 50 0 Q80 25 100 50" />
-              <path d="M5 55 Q30 30 55 10 Q75 35 95 55" />
-              <path d="M10 60 Q35 40 60 25" />
-            </g>
-            <circle cx="15" cy="15" r="4" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
-            <circle cx="25" cy="35" r="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.6" />
-          </svg>
-          <svg className="absolute top-6 right-6 w-40 h-40 opacity-80 scale-x-[-1]" viewBox="0 0 100 100">
-            <g fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1">
-              <path d="M0 50 Q20 20 50 0 Q80 25 100 50" />
-              <path d="M5 55 Q30 30 55 10 Q75 35 95 55" />
-              <path d="M10 60 Q35 40 60 25" />
-            </g>
-            <circle cx="15" cy="15" r="4" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
-          </svg>
-          <svg className="absolute bottom-6 left-6 w-40 h-40 opacity-80 scale-y-[-1]" viewBox="0 0 100 100">
-            <g fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1">
-              <path d="M0 50 Q20 20 50 0 Q80 25 100 50" />
-              <path d="M5 55 Q30 30 55 10 Q75 35 95 55" />
-            </g>
-            <circle cx="15" cy="15" r="4" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
-          </svg>
-          <svg className="absolute bottom-6 right-6 w-40 h-40 opacity-80 scale-x-[-1] scale-y-[-1]" viewBox="0 0 100 100">
-            <g fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1">
-              <path d="M0 50 Q20 20 50 0 Q80 25 100 50" />
-              <path d="M5 55 Q30 30 55 10 Q75 35 95 55" />
-            </g>
-            <circle cx="15" cy="15" r="4" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
-          </svg>
-          {/* Side vines - delicate scrolls */}
-          <svg className="absolute top-1/2 left-4 -translate-y-1/2 w-20 h-64 opacity-60" viewBox="0 0 40 200">
-            <path d="M20 0 Q5 50 20 100 Q35 150 20 200" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" fill="none" />
-            <path d="M20 20 Q30 60 20 100 Q10 140 20 180" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" fill="none" />
-          </svg>
-          <svg className="absolute top-1/2 right-4 -translate-y-1/2 w-20 h-64 opacity-60 scale-x-[-1]" viewBox="0 0 40 200">
-            <path d="M20 0 Q5 50 20 100 Q35 150 20 200" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" fill="none" />
-          </svg>
-        </div>
-        <button
-          onClick={handleOpen}
-          className="group relative z-10 h-full w-full flex flex-col items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9E1C60] focus:ring-offset-4 rounded-lg"
-          aria-label="Open invitation"
-        >
-          <div
-            className={`flex-1 flex items-center justify-center w-full min-h-0 transition-all duration-700 ${
-              isAnimating
-                ? "scale-125 opacity-0"
-                : "scale-100 opacity-100 group-hover:scale-105"
-            }`}
+        {step === "sealed" || step === "opening" ? (
+          <button
+            type="button"
+            onClick={advance}
+            className="flex h-full w-full items-center justify-center px-6 focus:outline-none"
+            aria-label="Open the envelope"
           >
-            <svg
-              viewBox="0 0 280 180"
-              className="w-full max-w-4xl h-auto min-h-[50vh] max-h-[70vh] drop-shadow-2xl"
+            <div
+              className={`envelope-scene relative w-full max-w-3xl transition-transform duration-700 ${
+                step === "opening" ? "scale-95" : "scale-100"
+              }`}
             >
-              <defs>
-                <linearGradient id="envelope-body" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#D25353" />
-                  <stop offset="100%" stopColor="#811844" />
-                </linearGradient>
-                <linearGradient id="envelope-flap" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#213C51" />
-                  <stop offset="100%" stopColor="#9E1C60" />
-                </linearGradient>
-
-                {/* Floral image texture (from public/images/flower.jpg) */}
-                <pattern
-                  id="envelope-floral-photo"
-                  patternUnits="userSpaceOnUse"
-                  x="0"
-                  y="0"
-                  width="280"
-                  height="180"
+              <div className="relative h-56 bg-[#e7d5c8] shadow-[0_18px_50px_rgba(80,50,40,0.18)] sm:h-72">
+                <div className="absolute inset-0 bg-[#f7f1ea]" />
+                <div
+                  className={`envelope-flap absolute inset-x-0 top-0 z-10 h-[74%] bg-[#f4ebe4] ${
+                    step === "opening" ? "is-open" : ""
+                  }`}
+                  style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
                 >
-                  <image
-                    href="/images/flower.jpg"
-                    x="-20"
-                    y="-20"
-                    width="300"
-                    height="200"
-                    preserveAspectRatio="xMidYMid slice"
-                    opacity="0.95"
-                  />
-                </pattern>
-              </defs>
+                  <div className="pt-8 text-center sm:pt-12">
+                    <p className={`${script.className} text-5xl text-[#5c463c] sm:text-6xl`}>
+                      Erlan & Andrea
+                    </p>
+                    <p className={`${serif.className} mt-1 text-sm tracking-wide text-[#7a6156] sm:text-base`}>
+                      January 14, 2029
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className={`absolute left-1/2 top-[74%] z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#8d3b4a] shadow-md transition-all duration-700 ${
+                    step === "opening" ? "-translate-y-16 opacity-0" : ""
+                  }`}
+                >
+                  <span className={`${script.className} text-2xl text-[#f8efe8]`}>E</span>
+                </div>
+              </div>
+            </div>
+          </button>
+        ) : null}
 
-              {/* Soft card background */}
-              <rect x="12" y="12" width="256" height="156" rx="16" fill="#FBF4F6" />
-
-              {/* Shadow under envelope */}
-              <ellipse cx="140" cy="150" rx="92" ry="9" fill="rgba(0,0,0,0.09)" />
-
-              {/* Envelope body with floral photo background */}
-              <rect
-                x="30"
-                y="60"
-                width="220"
-                height="90"
-                rx="10"
-                fill="url(#envelope-floral-photo)"
-                stroke="#65113A"
-                strokeWidth="1.5"
+        {step === "countdown" || step === "calendar" ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="relative h-full max-w-full">
+              <img
+                src="/images/eqw.png"
+                alt="Erlan and Andrea"
+                className="h-full w-auto max-w-full object-contain"
               />
-              {/* Gentle tint so flowers look aesthetic/soft */}
-              <rect
-                x="30"
-                y="60"
-                width="220"
-                height="90"
-                rx="10"
-                fill="rgba(251, 244, 246, 0.45)"
-              />
-
-              {/* Bottom inner folds */}
-              <path
-                d="M 30 60 L 140 135 L 250 60"
-                fill="rgba(255,255,255,0.10)"
-                stroke="rgba(255,255,255,0.22)"
-                strokeWidth="0.9"
-              />
-
-              {/* Top flap */}
-              <path
-                d="M 30 60 L 140 20 L 250 60 L 140 92 Z"
-                fill="url(#envelope-flap)"
-                stroke="#65113A"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M 42 62 L 140 28 L 238 62"
-                fill="none"
-                stroke="rgba(255,255,255,0.4)"
-                strokeWidth="1"
-              />
-
-             
-           
-            
-            </svg>
+              <div className="absolute inset-0 bg-black/45" />
+            </div>
           </div>
-          {!isAnimating && (
-            <p
-              className="pb-12 sm:pb-16 text-sm uppercase tracking-[0.3em] font-light"
-              style={{ color: "#811844" }}
-            >
-              Click to open
-            </p>
-          )}
-        </button>
+        ) : null}
+
+        {step === "countdown" ? (
+          <button
+            type="button"
+            onClick={advance}
+            className="screen-rise relative flex h-full w-full items-center justify-center px-6 focus:outline-none"
+            aria-label="Show the calendar"
+          >
+            <div className="w-full max-w-sm px-4 py-8 text-center text-white sm:max-w-md">
+              <p className={`${script.className} text-6xl leading-none sm:text-7xl`}>EA</p>
+              <h1 className={`${serif.className} mt-2 text-4xl font-medium sm:text-5xl`}>
+                Erlan <span className={script.className}>&</span> Andrea
+              </h1>
+              <p className={`${serif.className} mt-3 text-xl italic text-white/90`}>January 14, 2029</p>
+              <div className="mt-8">
+                <Countdown time={time} />
+              </div>
+            </div>
+          </button>
+        ) : null}
+
+        {step === "calendar" ? (
+          <button
+            type="button"
+            onClick={advance}
+            className="screen-rise relative flex h-full w-full items-center justify-center px-6 focus:outline-none"
+            aria-label="Enter the invitation"
+          >
+            <div className="mx-auto flex w-full max-w-sm flex-col items-center px-4 py-8 text-center text-white sm:max-w-md">
+              <p className={`${caps.className} text-[12px] tracking-[0.5em]`}>Save the date</p>
+              <h2 className={`${serif.className} mt-3 text-5xl tracking-[0.18em] sm:text-6xl`}>JANUARY</h2>
+              <p className={`${serif.className} tracking-[0.4em] text-white/80`}>2029</p>
+              <div className="mt-6 w-full max-w-sm">
+                <div className="grid grid-cols-7 gap-y-2 text-sm">
+                  {WEEKDAYS.map((day) => (
+                    <div key={day} className={`${caps.className} text-[11px] tracking-wider text-white/70`}>
+                      {day}
+                    </div>
+                  ))}
+                  {days.map((day, index) => (
+                    <div key={`${day ?? "empty"}-${index}`} className="flex justify-center">
+                      {day ? (
+                        <span
+                          className={`${serif.className} flex h-8 w-8 items-center justify-center text-lg ${
+                            day === 14 ? "rounded-full border border-white" : ""
+                          }`}
+                        >
+                          {day}
+                        </span>
+                      ) : (
+                        <span className="h-8 w-8" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={addToCalendar}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") addToCalendar(event);
+                }}
+                className={`${serif.className} mt-8 inline-flex items-center gap-2 rounded-full border border-white/80 px-5 py-2 text-base`}
+              >
+                Add to Calendar
+              </span>
+            </div>
+          </button>
+        ) : null}
       </div>
 
-      {/* Main Content - revealed after envelope opened */}
-      <div
-        className={`transition-opacity duration-700 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      >
+      <div className={isDone ? "opacity-100" : "pointer-events-none opacity-0"}>
         {children}
       </div>
     </div>
