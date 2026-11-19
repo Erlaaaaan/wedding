@@ -44,23 +44,39 @@ export default function Form() {
         );
       }
 
-      // 1) Send EmailJS first so user can proceed even if Firestore rules block.
+      // 1) Build base params once
+      const baseParams = {
+        // Names
+        name: fullName || "Guest",
+        full_name: fullName || "Guest",
+        from_name: fullName || "Guest",
+        to_name: fullName || "Guest",
+
+        // Email / phone
+        email: email || "",
+        from_email: email || "",
+        reply_to: email || "",
+        phone: phone || "",
+
+        // Attendance
+        attendance: summary.statusLabel,
+        status,
+        status_label: summary.statusLabel,
+
+        // Full text body
+        message: `RSVP: ${summary.statusLabel}\nName: ${fullName || "Guest"}\nEmail: ${
+          email || "-"
+        }\nPhone: ${phone || "-"}\n\nMessage:\n${message || "-"}`,
+
+        source: "Wedding RSVP Form",
+      };
+
+      // 2) Send email to couple / host
       await emailjs.send(
         serviceId,
         templateId,
         {
-          // Cover the common variable names you might be using in the template
-          // Names
-          name: fullName || "Guest",
-          full_name: fullName || "Guest",
-          from_name: fullName || "Guest",
-          to_name: fullName || "Guest",
-
-          // Email / phone
-          email: email || "",
-          from_email: email || "",
-          reply_to: email || "",
-          to_email: "kokobebebabryant@gmail.com",
+          ...baseParams,
           phone: phone || "",
 
           // Attendance
@@ -74,9 +90,23 @@ export default function Form() {
           }\nPhone: ${phone || "-"}\n\nMessage:\n${message || "-"}`,
 
           source: "Wedding RSVP Form",
+          to_email: "Justindungog112@gmail.com",
         },
         { publicKey }
       );
+
+      // 3) Also send confirmation email to guest (if they provided an email)
+      if (email) {
+        await emailjs.send(
+          serviceId,
+          templateId,
+          {
+            ...baseParams,
+            to_email: email,
+          },
+          { publicKey }
+        );
+      }
 
       setSubmitted(true);
 
