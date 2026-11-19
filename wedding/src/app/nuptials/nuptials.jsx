@@ -7,7 +7,7 @@ export default function NuptialsSection() {
   };
 
   const parentsGroom = [
-    "Mr. Groom Father (placeholder)",
+    "Mrsssss Groom Father (placeholder)",
     "Mrs. Groom Mother (placeholder)",
   ];
   const parentsBride = [
